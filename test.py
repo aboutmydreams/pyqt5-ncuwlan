@@ -19,7 +19,6 @@ def ncuwlan(name,psw):
     t1 = time.time()
     url = 'http://222.204.3.221:804/include/auth_action.php'
     a = base64.b64encode(psw.encode(encoding='utf-8')).decode()
-    # print(a,type(a))
     data = {
         'action': 'login',
         'username': name,
@@ -35,21 +34,23 @@ def ncuwlan(name,psw):
         res = requests.post(url,data=data,timeout=5).text
         if 'login_ok' in res:
             print("connect!")
-            return 'ok'
+            return '登录成功~'
         elif 'E2532' in res:
             print('rest some time')
             time.sleep(12)
-            return 'ok'
+            return '稍等一会哟'
         elif ('E2531' in res) or ('E2553' in res):
-            return 'wrong'
+            return '用户名或密码错了噢'
         elif 'Arrearage' in res:
-            return 'far'
+            return '超过范围了噢'
         else:
             print('something wrong')
-            print(res[0:5] + str(da))
+            return str(res)
     except (requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError,requests.exceptions.ReadTimeout):
         print('ncuwlan can not be connected becuuse timeout')
-        return 'timeout'
+        return '无法连接网络'
+    except Exception as e:
+        return str(e)
 
 def connect(name,psw):
     while True:
@@ -59,10 +60,9 @@ def connect(name,psw):
             # print(now_res.status_code)
             time.sleep(7)
         except (requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError,requests.exceptions.ReadTimeout):
-            t1 = ncuwlan(name,psw)
-            t2 = time.time()
-            t3 = time.ctime()
-            print('{}s connected with{},now time is {}'.format(str(round(t2-t1,2)),t3,a_url))
+            ncuwlan(name,psw)
+        except Exception as e:
+            return False
 
 
 class login(QWidget):
@@ -74,7 +74,7 @@ class login(QWidget):
         self.setWindowTitle("login")
         layout = QGridLayout()
         layout.setColumnMinimumWidth(15,10)
-        self.setGeometry(870, 400, 160, 150)
+        self.setGeometry(880, 420, 160, 150)
 
         nameLabel = QLabel("账户")
         nameLabel.setGeometry(50,50,20,20)
@@ -98,22 +98,14 @@ class login(QWidget):
         name = self.nameLineEdit.text()  # 获取文本框内容
         psw = self.pswLineEdit.text()
         print('name: %s psw: %s ' % (name,psw))
+        tell = ncuwlan(name,psw)
         self.alert = QMessageBox()
-        self.alert.setText('123133213登录成功')
+        self.alert.setText(tell)
         self.alert.exec_()
+        if (tell == '登录成功~') or (tell == '稍等一会哟'):
+            connect(name,psw)
 
-        if ncuwlan(name,psw) == 'ok':
-            self.alert = QMessageBox()
-            self.alert.setText('登录成功')
-            self.alert.exec_()
-        elif ncuwlan(name,psw) == 'wrong':
-            self.alert = QMessageBox()
-            self.alert.setText('用户名或密码错了噢')
-            self.alert.exec_()
-        elif ncuwlan(name,psw) == 'far':
-            self.alert = QMessageBox()
-            self.alert.setText('超过范围了噢')
-            self.alert.exec_()
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = login()
