@@ -138,7 +138,6 @@ class login(QWidget):
             os.remove('us.txt')
             self.initUi()
 
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     if os.path.isfile("us.txt"):
