@@ -2,19 +2,10 @@ import sys, requests, base64, time
 from random import choice
 from PyQt5.QtWidgets import QWidget, QApplication, QGroupBox, QPushButton, QLabel, QHBoxLayout,  QVBoxLayout, QGridLayout, QFormLayout, QLineEdit, QTextEdit, QMessageBox
 
-
-
-da = {
-    1:'login_ok', 
-    'E2553': 'Password is error', 
-    'E2531': 'User not found', 
-    'E2616': 'Arrearage users qianfei',
-    'E2532': 'The two authentication interval cannot be less than 10 seconds',
-    }
-
 url_list = ['https://www.cnblogs.com/','https://www.coolapk.com/','https://www.w3cschool.cn/','https://www.baidu.com','https://zhidao.baidu.com','https://hanyu.baidu.com', 'http://www.kugou.com','https://www.sina.com.cn/','https://weibo.com/','http://www.sohu.com/','http://site.baidu.com/','https://www.guazi.com','https://open.163.com/','https://www.autohome.com.cn','https://www.imooc.com/','https://modao.cc/','https://jusp.tmall.com','http://www.4399.com/','http://www.tuniu.com/','https://mobile.pconline.com.cn/','http://www.rayli.com.cn/','http://www.hao123.com/zxfy','http://cp.iciba.com/']
 
 t1 = time.time()
+
 def ncuwlan(name,psw):
     t1 = time.time()
     url = 'http://222.204.3.221:804/include/auth_action.php'
