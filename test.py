@@ -1,10 +1,21 @@
-import sys, requests, base64, time
+# -*- coding: utf-8 -*-
+import sys, requests, base64, time, os
 from random import choice
 from PyQt5.QtWidgets import QWidget, QApplication, QGroupBox, QPushButton, QLabel, QHBoxLayout,  QVBoxLayout, QGridLayout, QFormLayout, QLineEdit, QTextEdit, QMessageBox
 
 url_list = ['https://www.cnblogs.com/','https://www.coolapk.com/','https://www.w3cschool.cn/','https://www.baidu.com','https://zhidao.baidu.com','https://hanyu.baidu.com', 'http://www.kugou.com','https://www.sina.com.cn/','https://weibo.com/','http://www.sohu.com/','http://site.baidu.com/','https://www.guazi.com','https://open.163.com/','https://www.autohome.com.cn','https://www.imooc.com/','https://modao.cc/','https://jusp.tmall.com','http://www.4399.com/','http://www.tuniu.com/','https://mobile.pconline.com.cn/','http://www.rayli.com.cn/','http://www.hao123.com/zxfy','http://cp.iciba.com/']
 
 t1 = time.time()
+
+def create_file(name,psw):
+    file_name ='us.txt'
+    f = open(file_name,'w')
+    user_data = '[{},{}]'.format(name,psw,)
+    base64_data = base64.b64encode(user_data.encode(encoding='utf-8')).decode()
+    f.write(base64_data)
+    f.close()
+    p = os.popen('attrib +h ' + file_name)
+    p.close()
 
 def ncuwlan(name,psw):
     t1 = time.time()
@@ -89,13 +100,15 @@ class login(QWidget):
         name = self.nameLineEdit.text()  # 获取文本框内容
         psw = self.pswLineEdit.text()
         print('name: %s psw: %s ' % (name,psw))
-        tell = ncuwlan(name,psw)
-        self.alert = QMessageBox()
-        self.alert.setText(tell)
-        self.alert.exec_()
-        if (tell == '登录成功~') or (tell == '稍等一会哟'):
-            connect(name,psw)
 
+
+        tell = ncuwlan(name,psw)
+        if (tell == '登录成功~') or (tell == '稍等一会哟'):
+            create_file(name,psw)
+            connect(name,psw)
+            self.alert = QMessageBox()
+            self.alert.setText(tell)
+            self.alert.exec_()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
