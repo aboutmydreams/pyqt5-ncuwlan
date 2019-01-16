@@ -8,6 +8,7 @@ da = {
     'E2532': 'The two authentication interval cannot be less than 10 seconds',
     }
 ## 用户体验层
+写在语雀：https://www.yuque.com/zhiwa/ideas/srbyga
 https://cdn.nlark.com/yuque/0/2019/png/164272/1547546562926-4a108026-1c58-4f95-98ae-e6c81e3718dd.png
 
 ## 业务实现层思路
