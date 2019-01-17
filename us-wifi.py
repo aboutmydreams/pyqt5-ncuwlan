@@ -83,6 +83,7 @@ class login(QWidget):
         super(login,self).__init__()
         self.initUi()
 
+    #  窗体的UI 一个title 两个文字 两个输入框 一个登录按钮
     def initUi(self):
         self.setWindowTitle("login")
         layout = QGridLayout()
@@ -110,7 +111,7 @@ class login(QWidget):
     def addNum(self):
         name = self.nameLineEdit.text()  # 获取文本框内容
         pwd = self.pwdLineEdit.text()
-        #print('name: %s pwd: %s ' % (name,pwd))
+        # print('name: %s pwd: %s ' % (name,pwd))
         tell = post_data(name,pwd)
         if (tell == '登录成功~') or (tell == '登录成功 等一小会就好'):
             create_file(name,pwd)
@@ -124,6 +125,7 @@ class login(QWidget):
             self.alert.setText(tell)
             self.alert.exec_()
 
+    # 自动登入，获取第一次登录成功时保存的用户信息
     def auto_login(self):
         f = open('us.txt', 'r')
         user_data = str(b64decode(f.read()), "utf-8")
@@ -140,6 +142,8 @@ class login(QWidget):
             remove('us.txt')
             self.initUi()
 
+
+# isfile('us.txt')判断用户是否登录
 if __name__ == '__main__':
     app = QApplication(argv)
     if isfile('us.txt'):
