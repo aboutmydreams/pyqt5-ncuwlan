@@ -2,6 +2,11 @@
 ## 2019.1.17
 如果经常更新会写在语雀：https://www.yuque.com/zhiwa/ideas/srbyga
 
+```bsah
+cd pyqt5-ncuwlan
+pyinstaller -F --icon=us-wifi.ico us-wifi.py
+```
+
 近来ncuwlan的网与机房ncuhome_edu的网经常断线，为许多人带来了不方便，有人吐槽主教的网打游戏断线qaq，写个脚本用python连一下非常简单，但是很多人并不拥有python的环境，并且，账号多端登录会容易掉线，于是想到写一个桌面程序来解决这一个问题。
 
 
