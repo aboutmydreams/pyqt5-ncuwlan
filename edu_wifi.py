@@ -4,10 +4,8 @@ import os
 import sys
 
 def ping_baidu():
-    ip = 'www.baidu.com'
-    backinfo = os.system('ping -c 1 -w 1 %s'%ip)
     # print(backinfo)
-    return backinfo
+    return os.system('ping -c 1 -w 1 www.baidu.com')
 
 def post_data(name,pwd):
     url = 'http://222.204.3.221:804/include/auth_action.php'

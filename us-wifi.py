@@ -13,11 +13,10 @@ url_list = ['https://www.cnblogs.com/','https://www.coolapk.com/','https://www.w
 
 # 创建文件用于加密与保存用户数据
 def create_file(name,pwd):
-    f = open('us.txt','w')
-    user_data = "['{}','{}']".format(name,pwd)
-    base64_data = b64encode(user_data.encode(encoding='utf-8')).decode()
-    f.write(base64_data)
-    f.close()
+    with open('us.txt','w') as f:
+        user_data = f"['{name}','{pwd}']"
+        base64_data = b64encode(user_data.encode(encoding='utf-8')).decode()
+        f.write(base64_data)
     # 以下两行是将文件隐藏，但是在打包后似乎出现了一些权限问题
     # p = popen('attrib +h ' + 'us.txt')
     # p.close()
@@ -46,7 +45,6 @@ def post_data(name,pwd):
         elif 'E2532' in res:
             # print('rest some time')
             return '登录成功 等一小会就好'
-            sleep(1)
         elif ('E2531' in res) or ('E2553' in res):
             return '用户名或密码错了噢'
         elif 'Arrearage' in res:
@@ -72,9 +70,8 @@ def connect(name,pwd):
         except (requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError,requests.exceptions.ReadTimeout):
             post_data(name,pwd)
         except Exception as e:
-            f = open('error_log.txt','a+')
-            f.write(str(n) +a_url + str(e))
-            f.close()
+            with open('error_log.txt','a+') as f:
+                f.write(str(n) +a_url + str(e))
             return False
 
 
@@ -113,7 +110,7 @@ class login(QWidget):
         pwd = self.pwdLineEdit.text()
         # print('name: %s pwd: %s ' % (name,pwd))
         tell = post_data(name,pwd)
-        if (tell == '登录成功~') or (tell == '登录成功 等一小会就好'):
+        if tell in ['登录成功~', '登录成功 等一小会就好']:
             create_file(name,pwd)
             self.alert = QMessageBox()
             self.alert.setText('连接成功，已在后台运行')
@@ -127,16 +124,15 @@ class login(QWidget):
 
     # 自动登入，获取第一次登录成功时保存的用户信息
     def auto_login(self):
-        f = open('us.txt', 'r')
-        user_data = str(b64decode(f.read()), "utf-8")
-        f.close()
+        with open('us.txt', 'r') as f:
+            user_data = str(b64decode(f.read()), "utf-8")
         data = eval(user_data)
         name, pwd = data[0], data[1]
         tell = post_data(name,pwd)
         self.alert = QMessageBox()
         self.alert.setText(tell)
         self.alert.exec_()
-        if (tell == '登录成功~') or (tell == '登录成功 等一小会就好'):
+        if tell in ['登录成功~', '登录成功 等一小会就好']:
             connect(name,pwd)
         if tell == '用户名或密码错了噢':
             remove('us.txt')
@@ -149,10 +145,10 @@ if __name__ == '__main__':
     if isfile('us.txt'):
         ex = login()
         ex.auto_login()
-        exit(app.exec_())
     else:
         ex = login()
         ex.show()
-        exit(app.exec_())
+
+    exit(app.exec_())
 
 # 现在为了解决第一次登录崩溃的问题，一个思路是线程，一个思路是新建UI窗体，ui与逻辑一定要分开
